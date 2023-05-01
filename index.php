@@ -1,4 +1,4 @@
-<?php include 'demo-backend/index.php'; ?>
+<?php include 'demo-backend/connect.php'; ?>
 
 <!DOCTYPE html>
 <html lang="en">
