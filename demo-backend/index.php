@@ -6,51 +6,10 @@ define('TABLE_PAGES', 'pages');
 define('TABLE_CHANGES', 'changes');
 
 // Retrieve page content from database
-$pageId = 1;
-$sql = "SELECT * FROM " . TABLE_PAGES . " WHERE id = " . $pageId;
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-    $pageData = $result->fetch_assoc();
-} else {
-    die("Page not found");
-}
-
-// Update page content in database
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $newContent = $_POST['content']; // Replace with the name of your form field
-
-    // Insert new change record
-    $sql = "INSERT INTO " . TABLE_CHANGES . " (page_id, content) VALUES ($pageId, '$newContent')";
-    $conn->query($sql);
-
-    // Update page content
-    $sql = "UPDATE " . TABLE_PAGES . " SET content = '$newContent' WHERE id = $pageId";
-    $conn->query($sql);
-
-    // Redirect to page
-    header('Location: /');
-    exit;
-}
-
-// Display page content
-echo $pageData['content'];
-
-
-
-
-// Modified Code
-require_once 'config.php';
-
-// Define database table names
-define('TABLE_PAGES', 'pages');
-define('TABLE_CHANGES', 'changes');
-
-// Retrieve page content from database
 $pageId = 1; 
-$sql = "SELECT * FROM " . TABLE_PAGES . " WHERE id = ?";
+$sql = "SELECT * FROM " . TABLE_PAGES . " WHERE id = $pageId";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param('i', $pageId);
+//$stmt->bind_param('i', $pageId);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -61,8 +20,7 @@ if ($result->num_rows > 0) {
 }
 
 // Update page content in database
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // $newContent = $_POST['content']; 
+if ($_SERVER['REQUEST_METHOD'] == 'POST') { 
     $navbar_brand = $_POST['navbar_brand'];
     $nav_item = $_POST['nav_item'];
     $header_h1 = $_POST['header_h1'];
@@ -98,24 +56,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $sql = "INSERT INTO " . TABLE_CHANGES . " (page_id, page_title, navbar_brand, nav_item, header_h1, header_paragraph,
     header_gs, header_lm, feature1_h2, feature1_paragraph, feature1_CTA, feature2_h2, feature2_paragraph, feature2_CTA, feature3_h2,
     feature3_paragraph, feature3_CTA, testimonial_h2, testimonial_paragraph, testimonial1_paragraph, testimonial1_name, testimonial2_paragraph,
-    testimonial2_name, contact_h2, contact_paragraph, contact_name, contact_email, contact_phone, contact_message, contact_btn, footer_paragraph) VALUES (?, ?)";
+    testimonial2_name, contact_h2, contact_paragraph, contact_name, contact_email, contact_phone, contact_message, contact_btn, footer_paragraph) 
+    VALUES ($pageId, $page_title, $navbar_brand, $nav_item, $header_h1, $header_paragraph, $header_gs, $header_lm, $feature1_h2, $feature1_paragraph,
+    $feature1_CTA, $feature2_h2, $feature2_paragraph, $feature2_CTA, $feature3_h2, $feature3_paragraph, $feature3_CTA, $testimonial_h2, $testimonial_paragraph, $testimonial1_paragraph,
+    $testimonial1_name, $testimonial2_paragraph, $testimonial2_name, $contact_h2, $contact_paragraph, $contact_name, $contact_email, $contact_phone,
+    $contact_message, $contact_btn, $footer_paragraph)";
+
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param('is', $pageId, $newContent);
-    $stmt->execute();
+
+    //$stmt->execute();
 
     // Update page content
-    $sql = "UPDATE " . TABLE_PAGES . " SET content = ? WHERE id = ?";
+    $sql = "UPDATE " . TABLE_PAGES . " SET page_title = '$page_title', navbar_brand = '$navbar_brand', nav_item = '$nav_item', header_h1 = '$header_h1', header_paragraph = '$header_paragraph', header_gs = '$header_gs', header_lm = '$header_lm', feature1_h2 = '$feature1_h2', feature1_paragraph = '$feature1_paragraph',
+    feature1_CTA = '$feature1_CTA', feature2_h2 = '$feature2_h2', feature2_paragraph = '$feature2_paragraph', feature2_CTA = '$feature2_CTA', feature3_h2 = '$feature3_h2', feature3_paragraph = '$feature3_paragraph', feature3_CTA = '$feature3_CTA', testimonial_h2 = '$testimonial_h2', testimonial_paragraph = '$testimonial_paragraph', testimonial1_paragraph = '$testimonial1_paragraph',
+    testimonial1_name = '$testimonial1_name', testimonial2_paragraph = '$testimonial2_paragraph', testimonial2_name = '$testimonial2_name', contact_h2 = '$contact_h2', contact_paragraph = '$contact_paragraph', contact_name = '$contact_name', contact_email = '$contact_email', contact_phone = '$contact_phone',
+    contact_message = '$contact_message', contact_btn = '$contact_btn', footer_paragraph = '$footer_paragraph' WHERE id = $pageId";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param('si', $newContent, $pageId);
-    $stmt->execute();
+    //$stmt->bind_param('si', $newContent, $pageId);
+    //$stmt->execute();
 
     // Redirect to page
     header('Location: /');
     exit;
 }
 
-// Display page content
-echo $pageData['content'];
+?>
+
+
+
+
+
 
 
 
